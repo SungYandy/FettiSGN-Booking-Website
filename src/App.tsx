@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageCircle, Facebook, Instagram } from 'lucide-react';
 import EntryGate from './components/EntryGate';
@@ -17,6 +17,20 @@ export default function App() {
   const [selectedTable, setSelectedTable] = useState<Table | null>(null);
 
   const [activeTab, setActiveTab] = useState<'main' | 'menu' | 'events'>('main');
+
+  // Disable scroll when splash screen is active
+  useEffect(() => {
+    if (!isEntered) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isEntered]);
 
   const handleTableSelect = (table: Table) => {
     setSelectedTable(table);
